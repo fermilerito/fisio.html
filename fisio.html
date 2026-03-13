@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Panel de Fisioterapia</title>
+
+<style>
+
+*{
+box-sizing:border-box;
+font-family:Segoe UI;
+}
+
+body{
+margin:0;
+background:#eef3f9;
+}
+
+header{
+background:#1f3c88;
+color:white;
+padding:20px;
+text-align:center;
+font-size:24px;
+font-weight:bold;
+}
+
+.container{
+max-width:1000px;
+margin:auto;
+padding:25px;
+}
+
+.card{
+background:white;
+border-radius:10px;
+padding:20px;
+margin-bottom:20px;
+box-shadow:0 5px 15px rgba(0,0,0,0.08);
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+}
+
+input{
+padding:12px;
+border:1px solid #ccc;
+border-radius:6px;
+}
+
+button{
+background:#1f3c88;
+color:white;
+border:none;
+padding:12px;
+border-radius:6px;
+cursor:pointer;
+font-weight:bold;
+}
+
+button:hover{
+background:#162c63;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+}
+
+th{
+background:#f0f3f9;
+padding:10px;
+}
+
+td{
+padding:10px;
+border-bottom:1px solid #ddd;
+text-align:center;
+}
+
+.share{
+background:#28a745;
+margin-top:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+Sistema de Dosificación de Ejercicios de Fisioterapia
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<h3>Agregar ejercicio terapéutico</h3>
+
+<div class="grid">
+
+<input id="paciente" placeholder="Nombre del paciente">
+
+<input id="ejercicio" placeholder="Ejercicio">
+
+<input id="series" type="number" placeholder="Series">
+
+<input id="reps" type="number" placeholder="Repeticiones">
+
+<input id="minutos" type="number" placeholder="Duración (minutos)">
+
+</div>
+
+<br>
+
+<button onclick="agregar()">Agregar ejercicio</button>
+
+<button class="share" onclick="generar()">Generar rutina para enviar al paciente</button>
+
+</div>
+
+<div class="card">
+
+<h3>Rutina del paciente</h3>
+
+<table>
+
+<thead>
+<tr>
+<th>Paciente</th>
+<th>Ejercicio</th>
+<th>Series</th>
+<th>Reps</th>
+<th>Minutos</th>
+</tr>
+</thead>
+
+<tbody id="tabla"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<script>
+
+let datos=[]
+
+function agregar(){
+
+let paciente=document.getElementById("paciente").value
+let ejercicio=document.getElementById("ejercicio").value
+let series=document.getElementById("series").value
+let reps=document.getElementById("reps").value
+let minutos=document.getElementById("minutos").value
+
+if(!paciente || !ejercicio) return
+
+datos.push({
+paciente,
+ejercicio,
+series,
+reps,
+minutos
+})
+
+render()
+
+}
+
+function render(){
+
+let tabla=document.getElementById("tabla")
+
+tabla.innerHTML=""
+
+datos.forEach(d=>{
+
+tabla.innerHTML+=`
+<tr>
+<td>${d.paciente}</td>
+<td>${d.ejercicio}</td>
+<td>${d.series}</td>
+<td>${d.reps}</td>
+<td>${d.minutos} min</td>
+</tr>
+`
+
+})
+
+}
+
+function generar(){
+
+let texto="Rutina de fisioterapia:\n\n"
+
+datos.forEach(d=>{
+texto+=`
+Paciente: ${d.paciente}
+Ejercicio: ${d.ejercicio}
+Series: ${d.series}
+Reps: ${d.reps}
+Duración: ${d.minutos} minutos
+
+`
+})
+
+navigator.clipboard.writeText(texto)
+
+alert("Rutina copiada. Puedes pegarla y enviarla al paciente por WhatsApp o correo.")
+
+}
+
+</script>
+
+</body>
+</html>
