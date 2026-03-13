@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+<meta charset="UTF-8">
+<title>FisioControl - Panel de Ejercicios</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Segoe UI;
+background:linear-gradient(120deg,#0f2027,#203a43,#2c5364);
+color:#333;
+}
+
+header{
+background:#0b132b;
+color:white;
+padding:20px;
+font-size:24px;
+text-align:center;
+letter-spacing:1px;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:30px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+margin-bottom:25px;
+}
+
+h2{
+margin-top:0;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:15px;
+}
+
+input{
+padding:12px;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+button{
+padding:12px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+font-weight:bold;
+}
+
+.agregar{
+background:#2563eb;
+color:white;
+}
+
+.agregar:hover{
+background:#1d4ed8;
+}
+
+.whatsapp{
+background:#25d366;
+color:white;
+}
+
+.whatsapp:hover{
+background:#1ebe5d;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+
+th{
+background:#0b132b;
+color:white;
+padding:10px;
+}
+
+td{
+padding:10px;
+border-bottom:1px solid #ddd;
+text-align:center;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+Sistema Profesional de Dosificación de Ejercicios de Fisioterapia
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Agregar ejercicio al paciente</h2>
+
+<div class="grid">
+
+<input id="paciente" placeholder="Nombre del paciente">
+
+<input id="ejercicio" placeholder="Ejercicio terapéutico">
+
+<input id="series" type="number" placeholder="Series">
+
+<input id="reps" type="number" placeholder="Repeticiones">
+
+<input id="minutos" type="number" placeholder="Duración (minutos)">
+
+<input id="telefono" placeholder="Teléfono paciente (WhatsApp)">
+
+</div>
+
+<br>
+
+<button class="agregar" onclick="agregar()">Agregar ejercicio</button>
+
+<button class="whatsapp" onclick="enviar()">Enviar rutina por WhatsApp</button>
+
+</div>
+
+<div class="card">
+
+<h2>Rutina del paciente</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Paciente</th>
+<th>Ejercicio</th>
+<th>Series</th>
+<th>Reps</th>
+<th>Minutos</th>
+</tr>
+</thead>
+
+<tbody id="tabla"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<script>
+
+let datos=[]
+
+function agregar(){
+
+let paciente=document.getElementById("paciente").value
+let ejercicio=document.getElementById("ejercicio").value
+let series=document.getElementById("series").value
+let reps=document.getElementById("reps").value
+let minutos=document.getElementById("minutos").value
+
+if(!paciente || !ejercicio) return
+
+datos.push({
+paciente,
+ejercicio,
+series,
+reps,
+minutos
+})
+
+render()
+
+}
+
+function render(){
+
+let tabla=document.getElementById("tabla")
+tabla.innerHTML=""
+
+datos.forEach(d=>{
+
+tabla.innerHTML+=`
+
+<tr>
+<td>${d.paciente}</td>
+<td>${d.ejercicio}</td>
+<td>${d.series}</td>
+<td>${d.reps}</td>
+<td>${d.minutos}</td>
+</tr>
+
+`
+
+})
+
+}
+
+function enviar(){
+
+let telefono=document.getElementById("telefono").value
+
+let mensaje="Rutina de fisioterapia:%0A%0A"
+
+datos.forEach(d=>{
+
+mensaje+=`
+Paciente: ${d.paciente}%0A
+Ejercicio: ${d.ejercicio}%0A
+Series: ${d.series}%0A
+Reps: ${d.reps}%0A
+Duración: ${d.minutos} minutos%0A%0A
+`
+
+})
+
+let url=`https://wa.me/${telefono}?text=${mensaje}`
+
+window.open(url)
+
+}
+
+</script>
+
+</body>
+</html>
