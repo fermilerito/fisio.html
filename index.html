@@ -1,78 +1,93 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+
 <meta charset="UTF-8">
-<title>Panel de Fisioterapia</title>
+<title>FisioControl - Panel de Ejercicios</title>
 
 <style>
 
-*{
-box-sizing:border-box;
-font-family:Segoe UI;
-}
-
 body{
 margin:0;
-background:#eef3f9;
+font-family:Segoe UI;
+background:linear-gradient(120deg,#0f2027,#203a43,#2c5364);
+color:#333;
 }
 
 header{
-background:#1f3c88;
+background:#0b132b;
 color:white;
 padding:20px;
-text-align:center;
 font-size:24px;
-font-weight:bold;
+text-align:center;
+letter-spacing:1px;
 }
 
 .container{
-max-width:1000px;
+max-width:1100px;
 margin:auto;
-padding:25px;
+padding:30px;
 }
 
 .card{
 background:white;
-border-radius:10px;
-padding:20px;
-margin-bottom:20px;
-box-shadow:0 5px 15px rgba(0,0,0,0.08);
+padding:25px;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+margin-bottom:25px;
+}
+
+h2{
+margin-top:0;
 }
 
 .grid{
 display:grid;
-grid-template-columns:1fr 1fr;
+grid-template-columns:repeat(3,1fr);
 gap:15px;
 }
 
 input{
 padding:12px;
-border:1px solid #ccc;
 border-radius:6px;
+border:1px solid #ccc;
 }
 
 button{
-background:#1f3c88;
-color:white;
-border:none;
 padding:12px;
+border:none;
 border-radius:6px;
 cursor:pointer;
 font-weight:bold;
 }
 
-button:hover{
-background:#162c63;
+.agregar{
+background:#2563eb;
+color:white;
+}
+
+.agregar:hover{
+background:#1d4ed8;
+}
+
+.whatsapp{
+background:#25d366;
+color:white;
+}
+
+.whatsapp:hover{
+background:#1ebe5d;
 }
 
 table{
 width:100%;
 border-collapse:collapse;
-margin-top:15px;
+margin-top:20px;
 }
 
 th{
-background:#f0f3f9;
+background:#0b132b;
+color:white;
 padding:10px;
 }
 
@@ -82,11 +97,6 @@ border-bottom:1px solid #ddd;
 text-align:center;
 }
 
-.share{
-background:#28a745;
-margin-top:10px;
-}
-
 </style>
 
 </head>
@@ -94,20 +104,20 @@ margin-top:10px;
 <body>
 
 <header>
-Sistema de Dosificación de Ejercicios de Fisioterapia
+Sistema Profesional de Dosificación de Ejercicios de Fisioterapia
 </header>
 
 <div class="container">
 
 <div class="card">
 
-<h3>Agregar ejercicio terapéutico</h3>
+<h2>Agregar ejercicio al paciente</h2>
 
 <div class="grid">
 
 <input id="paciente" placeholder="Nombre del paciente">
 
-<input id="ejercicio" placeholder="Ejercicio">
+<input id="ejercicio" placeholder="Ejercicio terapéutico">
 
 <input id="series" type="number" placeholder="Series">
 
@@ -115,19 +125,21 @@ Sistema de Dosificación de Ejercicios de Fisioterapia
 
 <input id="minutos" type="number" placeholder="Duración (minutos)">
 
+<input id="telefono" placeholder="Teléfono paciente (WhatsApp)">
+
 </div>
 
 <br>
 
-<button onclick="agregar()">Agregar ejercicio</button>
+<button class="agregar" onclick="agregar()">Agregar ejercicio</button>
 
-<button class="share" onclick="generar()">Generar rutina para enviar al paciente</button>
+<button class="whatsapp" onclick="enviar()">Enviar rutina por WhatsApp</button>
 
 </div>
 
 <div class="card">
 
-<h3>Rutina del paciente</h3>
+<h2>Rutina del paciente</h2>
 
 <table>
 
@@ -178,43 +190,47 @@ render()
 function render(){
 
 let tabla=document.getElementById("tabla")
-
 tabla.innerHTML=""
 
 datos.forEach(d=>{
 
 tabla.innerHTML+=`
+
 <tr>
 <td>${d.paciente}</td>
 <td>${d.ejercicio}</td>
 <td>${d.series}</td>
 <td>${d.reps}</td>
-<td>${d.minutos} min</td>
+<td>${d.minutos}</td>
 </tr>
+
 `
 
 })
 
 }
 
-function generar(){
+function enviar(){
 
-let texto="Rutina de fisioterapia:\n\n"
+let telefono=document.getElementById("telefono").value
+
+let mensaje="Rutina de fisioterapia:%0A%0A"
 
 datos.forEach(d=>{
-texto+=`
-Paciente: ${d.paciente}
-Ejercicio: ${d.ejercicio}
-Series: ${d.series}
-Reps: ${d.reps}
-Duración: ${d.minutos} minutos
 
+mensaje+=`
+Paciente: ${d.paciente}%0A
+Ejercicio: ${d.ejercicio}%0A
+Series: ${d.series}%0A
+Reps: ${d.reps}%0A
+Duración: ${d.minutos} minutos%0A%0A
 `
+
 })
 
-navigator.clipboard.writeText(texto)
+let url=`https://wa.me/${telefono}?text=${mensaje}`
 
-alert("Rutina copiada. Puedes pegarla y enviarla al paciente por WhatsApp o correo.")
+window.open(url)
 
 }
 
